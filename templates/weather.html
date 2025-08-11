@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hello from Flask</title>
+  </head>
+
+  <body>
+    <h1>Wyatt's Weather App</h1>
+    <h3>Enter a city name</h3>
+    <!-- onsubmit = when submit event is fired, do thing -->
+      <label for="cityName">City name:</label> <br>
+      <input type="text" id="cityName" name="cityName" value="Whittier"> <br>
+      <input type="submit" id="submitButton" onclick="getWeatherData()" value="Submit">
+    <p>If you click the "Submit" button... triggers an "on click" event, but we haven't coded it out yet</p>
+    <p>Update: still not coded out yet</p>
+    <div id="weatherDataContainer">
+      <div id="currentWeather">Current weather in your location is:</div>
+      <div id="currentWeatherValue"></div>
+    </div>
+    <div id="historyContainer">
+        <h4>Location History:</h4>
+        <ul id="historyList">
+        </ul>
+          
+    </div>
+
+  </body>
+</html>
+<!-- Imported an external library - Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!--  ---------------------------------------------------------------------------------------------------  -->
+<!--  ---------------------------------------------------------------------------------------------------  -->
+<!--  ---------------------------------------------------------------------------------------------------  -->
+
+<script>
+  // some js code to capture the event, send as a get request to the right route
+  submitButton = document.getElementById("submitButton");
+  cityName = document.getElementById("cityName");
+
+  var addHistoryToDom = (history) => {
+    var cities = history.split(", ");
+    var historyList = document.getElementById("historyList");
+
+    for (var i = 0; i < cities.length; i++) {
+      if (cities[i].trim() !== "") { // Check if the city name is not empty
+        var listItem = document.createElement("li");
+        listItem.textContent = cities[i].trim(); // Trim whitespace
+        historyList.appendChild(listItem);
+      }
+    }
+    
+  }
+
+  function ready() {
+    // Make a get request to /weather-data using built-in JS fetch
+    var request = new Request("http://127.0.0.1:5000/weather-history");
+    fetch(request).then((response) => {
+       return response.text();
+      }
+    ).then((history)=> {
+        console.log(history);
+        addHistoryToDom(history);
+    })
+  }
+  // https://developer.mozilla.org/en/docs/Web/API/Document/readyState
+  if (document.readyState !== 'loading') {
+    ready()
+  } else {
+    document.addEventListener('DOMContentLoaded', ready)
+  }
+
+  var addWeatherDataToDom = (weatherData) => {
+    /*
+    // weatherDataContainer = document.getElementById("weatherDataContainer");
+    // weatherDataOutput = document.createElement("div")
+    // node = document.createTextNode(weatherData["main"]["temp"]);
+    // weatherDataOutput.appendChild(node);
+    // weatherDataContainer.appendChild(weatherDataOutput);
+    */
+
+    addHistoryToDom(weatherData['name']);
+
+    var currentWeatherValue = document.getElementById("currentWeatherValue");
+    currentWeatherValue.innerText = weatherData['main']['temp'];
+  };
+
+  var getWeatherData = async () => {
+     var cityNameToReturn = cityName.value;
+    // console.log("City name: " + cityNameToReturn);
+    
+    // Make a get request to /weather-data using built-in JS fetch
+    var request = new Request("http://127.0.0.1:5000/weather-data?cityName=" + cityNameToReturn);
+    fetch(request).then((response) => {
+       return response.json();
+      }
+    ).then((data)=> {
+      console.log(data);
+      if (data.success === false) {
+        alert(data.message);
+        return;
+      }
+      // data exists in this scope
+      // Add to html dom
+      addWeatherDataToDom(data);
+
+    })
+
+    /*
+    // // A get request using external library (Axios)
+    // const data = await axios.get('http://127.0.0.1:5000/weather-data?cityName=' + cityNameToReturn)
+    // console.log(data)
+    // // Data exists here
+    // // add to html dom here
+    */
+
+  };
+
+</script>
+
