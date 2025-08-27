@@ -24,3 +24,4 @@ def history_controller():
     history = f.read()
     f.close()
     return history
+

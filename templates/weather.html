@@ -1,4 +1,7 @@
 <!doctype html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/weather.css') }}">
+</head>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -11,18 +14,16 @@
     <!-- onsubmit = when submit event is fired, do thing -->
       <label for="cityName">City name:</label> <br>
       <input type="text" id="cityName" name="cityName" value="Whittier"> <br>
-      <input type="submit" id="submitButton" onclick="getWeatherData()" value="Submit">
-    <p>If you click the "Submit" button... triggers an "on click" event, but we haven't coded it out yet</p>
-    <p>Update: still not coded out yet</p>
+      <input class="button" type="submit" id="submitButton" onclick="getWeatherData()" value="Submit">
+    <!-- <p>If you click the "Submit" button... triggers an "on click" event, but we haven't coded it out yet</p>
+    <p>Update: still not coded out yet</p> -->
     <div id="weatherDataContainer">
       <div id="currentWeather">Current weather in your location is:</div>
       <div id="currentWeatherValue"></div>
     </div>
-    <div id="historyContainer">
-        <h4>Location History:</h4>
-        <ul id="historyList">
-        </ul>
-          
+    <h4>Location History:</h4>
+    <div id="historyContainer" class="container">
+        <!-- <ul id="historyList"></ul> -->
     </div>
 
   </body>
@@ -41,13 +42,23 @@
 
   var addHistoryToDom = (history) => {
     var cities = history.split(", ");
+    console.log(cities);
     var historyList = document.getElementById("historyList");
+    historyContainer = document.getElementById("historyContainer");
 
     for (var i = 0; i < cities.length; i++) {
       if (cities[i].trim() !== "") { // Check if the city name is not empty
-        var listItem = document.createElement("li");
-        listItem.textContent = cities[i].trim(); // Trim whitespace
-        historyList.appendChild(listItem);
+        /* old code using unsorted list */
+        // var listItem = document.createElement("li");
+        // listItem.textContent = cities[i].trim(); // Trim whitespace
+        // historyList.appendChild(listItem);
+
+        var cityBox = document.createElement("div");
+        cityBox.className = "box";
+        var span = document.createElement("span");
+        span.textContent = cities[i].trim()
+        cityBox.appendChild(span);
+        historyContainer.appendChild(cityBox);
       }
     }
     
@@ -60,7 +71,7 @@
        return response.text();
       }
     ).then((history)=> {
-        console.log(history);
+        //console.log(history);
         addHistoryToDom(history);
     })
   }
@@ -96,7 +107,7 @@
        return response.json();
       }
     ).then((data)=> {
-      console.log(data);
+      //console.log(data);
       if (data.success === false) {
         alert(data.message);
         return;
