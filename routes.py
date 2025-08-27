@@ -15,7 +15,7 @@ def weather_app():
 
 @app.route("/weather-history")
 def weather_history():
-    controller.history_controller()
+    return controller.history_controller()
 
 # @app.route("/entirely different project")
 # def different_project():

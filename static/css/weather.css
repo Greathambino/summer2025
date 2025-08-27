@@ -1,0 +1,106 @@
+body {
+  background-color: #f0f4f8;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Verdana, Garamond, Helvetica, sans-serif;
+}
+h1 {
+  margin-bottom: 20px;
+}
+
+/* Styling the History List */
+/* I want a flex box container that is static in size, but the boxes for the cities wrap
+   to the next line if needed. The boxes should be centered horizontally, and aligned to the top vertically.
+   I want scroll capability if the content exceeds the container size, or I can play with a vertically maleable container.
+
+*/
+.container{
+  display: flex;
+  flex: 0 1 auto;
+  overflow: auto;
+
+  flex-direction: row;
+  justify-content: space-between;
+  column-gap: 1em;
+  row-gap: 1em;
+
+  border: 5px solid black;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  padding: 1em 1em;
+
+  width: 40vw;
+  max-height: 40vh;
+}
+.box {
+  /* grow, shrink, basis */
+  flex: 0 0 calc(25% - 1em);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  padding-top: 0.5em; /* spacing from the top */
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+
+  text-align: center;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: rgb(238, 250, 146);
+}
+/* From chatgpt, fixing long names */
+.box span {
+  display: inline-block;
+  width: 100%;
+  font-size: clamp(0.4em, 1.5vw, 1.2em);
+}
+
+
+/* From Uiverse.io by Gaurav-WebDev */ 
+.button {
+  height: 50px;
+  width: 200px;
+  position: relative;
+  background-color: transparent;
+  cursor: pointer;
+  border: 2px solid #252525;
+  overflow: hidden;
+  border-radius: 30px;
+  color: #333;
+  transition: all 0.5s ease-in-out;
+}
+
+.btn-txt {
+  z-index: 1;
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+
+.type1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: all 0.5s ease-in-out;
+  background-color: #333;
+  border-radius: 30px;
+  visibility: hidden;
+  height: 10px;
+  width: 10px;
+  z-index: -1;
+}
+
+.button:hover {
+  box-shadow: 1px 1px 10px #252525;
+  color: #b7b6b6;
+  border: none;
+}
+
+.type1:hover::after {
+  visibility: visible;
+  transform: scale(100) translateX(2px);
+}
+/* End of button CSS */
